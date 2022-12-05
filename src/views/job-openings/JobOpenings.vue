@@ -11,7 +11,7 @@
         style="width: 240px"
       >
         <el-option
-          v-for="department in allDep"
+          v-for="department in allDepartments"
           :key="department.value"
           :value="department.name"
         />
@@ -56,13 +56,6 @@ import { departments } from '@/_homework/departments'
 
 import DepartmentCard from './components/DepartmentCard.vue'
 
-/// Add other to all departments
-const otherDepartment = [{
-  name: 'Other',
-  value: 'Other'
-}]
-const allDep = [...departments, ...otherDepartment]
-
 /// Selected departments from input
 const selectedDepartmetns = ref<[]>([])
 
@@ -90,6 +83,24 @@ const transformedArray = computed(() => {
   }))
 
   return [...jobsWithDep, otherObj]
+})
+
+/// All departments w/o epmty
+const allDepartments = computed(() => {
+  const allDepArr = []
+  const allDepObjArr = transformedArray.value.filter(el => {
+    if (el.jobOpenings.length > 0) {
+      return el.department
+    }
+  }).map(el => el.department)
+
+  for (let i = 0; i < allDepObjArr.length; i++) {
+    allDepArr.push({
+      name: allDepObjArr[i],
+      value: allDepObjArr[i].toLowerCase()
+    })
+  }
+  return allDepArr
 })
 
 /// Filtered departments and jobs base on input value
