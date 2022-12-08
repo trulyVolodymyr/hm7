@@ -25,7 +25,7 @@
       >
         {{ numberOfShowedJobs }} out of
       </span>
-      1458  job openings
+      811  job openings
     </p>
 
     <div />
@@ -74,7 +74,7 @@ const transformedArray = computed(() => {
     length: otherArr.length
   }
 
-  /// Jobs woth departments
+  /// Jobs with departments
   const jobsWithDep = departments.map(el => [el.name,
     jobOpenings.filter(job => job.departments.some(r => el.value.includes(r)))]).map(x => ({
     department: x[0] as string,
@@ -100,25 +100,28 @@ const allDepartments = computed(() => {
       value: allDepObjArr[i].toLowerCase()
     })
   }
-  return allDepArr
+
+  return allDepArr.sort((a, b) => a.name.localeCompare(b.name))
 })
 
 /// Filtered departments and jobs base on input value
 const filterJobOpenings = computed(() => {
   if (selectedDepartmetns.value.length <= 0) {
-    return transformedArray.value
+    return transformedArray.value.sort((a, b) => a.department.localeCompare(b.department))
   } else {
     return transformedArray.value.filter(job => selectedDepartmetns.value.some(r => job.department.includes(r)))
+      .sort((a, b) => a.department.localeCompare(b.department))
   }
 })
 
 /// Number of showed jobs
 const numberOfShowedJobs = computed(() => {
-  let numberOfJobs = 0
+  const vova = new Set()
   for (let i = 0; i < filterJobOpenings.value.length; i++) {
-    filterJobOpenings.value[i].jobOpenings.forEach(() => numberOfJobs++)
+    filterJobOpenings.value[i].jobOpenings.forEach((el) => vova.add(el))
   }
-  return numberOfJobs
+
+  return vova.size
 })
 
 </script>
